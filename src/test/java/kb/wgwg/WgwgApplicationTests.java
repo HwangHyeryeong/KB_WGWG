@@ -1,11 +1,10 @@
 package kb.wgwg;
 
-import kb.wgwg.domain.Article;
-import kb.wgwg.domain.Banking;
-import kb.wgwg.domain.User;
-import kb.wgwg.repository.ArticleRepository;
-import kb.wgwg.repository.BankingRepository;
-import kb.wgwg.repository.UserRepository;
+import kb.wgwg.article.domain.Article;
+import kb.wgwg.user.domain.User;
+import kb.wgwg.article.repository.ArticleRepository;
+import kb.wgwg.banking.repository.BankingRepository;
+import kb.wgwg.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
