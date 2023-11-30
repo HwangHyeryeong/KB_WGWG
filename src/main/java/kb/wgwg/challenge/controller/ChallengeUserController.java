@@ -29,7 +29,7 @@ public class ChallengeUserController {
         BaseResponseDTO<Page<ReadChallengeUserResponseDTO>> response = new BaseResponseDTO<>();
         try{
             Page<ReadChallengeUserResponseDTO> result = challengeUserService.readChallengeUserByChallengeId(dto, pageable);
-            response.setMessage("참가자 정보 읽기 완료.");
+            response.setMessage(ResponseMessage.READ_CHALLENGE_USER_INFO_SUCCESS);
             response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
@@ -48,7 +48,7 @@ public class ChallengeUserController {
         BaseResponseDTO<CheckChallengeUserResponseDTO> response = new BaseResponseDTO<>();
         try {
             CheckChallengeUserResponseDTO result = challengeUserService.checkChallengeUser(dto);
-            response.setMessage("유저 식별 완료.");
+            response.setMessage(ResponseMessage.IDENTIFY_CHALLENGE_USER_INFO_SUCCESS);
             response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
@@ -68,7 +68,7 @@ public class ChallengeUserController {
         BaseResponseDTO<challengeUserCntResponse> response = new BaseResponseDTO<>();
         try {
             challengeUserCntResponse result = challengeUserService.countUser(dto);
-            response.setMessage("참여자수 카운트 성공.");
+            response.setMessage(ResponseMessage.COUNT_CHALLENGE_USER_INFO_SUCCESS);
             response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);

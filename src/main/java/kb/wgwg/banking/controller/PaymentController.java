@@ -1,5 +1,7 @@
 package kb.wgwg.banking.controller;
 
+import kb.wgwg.common.ResponseMessage;
+import kb.wgwg.common.StatusCode;
 import kb.wgwg.common.dto.BaseResponseDTO;
 import kb.wgwg.challenge.dto.ChallengeDTO.*;
 import kb.wgwg.banking.service.PaymentService;
@@ -21,11 +23,11 @@ public class PaymentController {
         BaseResponseDTO result = new BaseResponseDTO<>();
         try {
             paymentService.updateIsSuccess(requestDTO);
-            result.setStatus(200);
+            result.setStatus(StatusCode.OK);
             result.setSuccess(true);
-            result.setMessage("납입금 입금 확인 되었습니다.");
+            result.setMessage(ResponseMessage.INSERT_PAYMENT_SUCCESS);
         }catch (Exception e){
-            result.setStatus(404);
+            result.setStatus(StatusCode.NOT_FOUND);
             result.setMessage(e.getMessage());
             result.setSuccess(false);
         }
@@ -39,22 +41,22 @@ public class PaymentController {
             try{
                 paymentService.updateTotalAsset(requestDTO);
                 result.setSuccess(true);
-                result.setStatus(200);
-                result.setMessage("총 납입금이 수정되었습니다.");
+                result.setStatus(StatusCode.OK);
+                result.setMessage(ResponseMessage.UPDATE_TOTAL_PAYMENT_SUCCESS);
             }catch (Exception e){
                 result.setSuccess(false);
-                result.setStatus(404);
+                result.setStatus(StatusCode.NOT_FOUND);
                 result.setMessage(e.getMessage());
             }
         }else{
             try{
                 paymentService.updateTotalDeposit(requestDTO);
                 result.setSuccess(true);
-                result.setStatus(200);
-                result.setMessage("총 보증금이 수정되었습니다.");
+                result.setStatus(StatusCode.OK);
+                result.setMessage(ResponseMessage.UPDATE_TOTAL_DEPOSIT_SUCCESS);
             }catch (Exception e){
                 result.setSuccess(false);
-                result.setStatus(404);
+                result.setStatus(StatusCode.NOT_FOUND);
                 result.setMessage(e.getMessage());
             }
         }

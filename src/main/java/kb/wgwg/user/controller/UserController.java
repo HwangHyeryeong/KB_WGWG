@@ -30,8 +30,8 @@ public class UserController {
     public ResponseEntity<BaseResponseDTO> login(@RequestBody UserLoginRequestDTO requestDTO) {
         BaseResponseDTO<UserLoginResponseDTO> result2 = new BaseResponseDTO<>();
         UserLoginResponseDTO result = userService.login(requestDTO);
-        result2.setMessage("로그인 성공");
-        result2.setStatus(200);
+        result2.setMessage(ResponseMessage.LOGIN_SUCCESS);
+        result2.setStatus(StatusCode.OK);
         result2.setSuccess(true);
         result2.setData(result);
         return ResponseEntity.ok(result2);
@@ -41,8 +41,8 @@ public class UserController {
     public ResponseEntity<BaseResponseDTO> readById(@RequestBody UserReadRequestDTO requestDTO) {
         BaseResponseDTO<UserReadResponseDTO> result2 = new BaseResponseDTO<>();
         UserReadResponseDTO result = userService.readById(requestDTO);
-        result2.setMessage("성공");
-        result2.setStatus(200);
+        result2.setMessage(ResponseMessage.READ_USER_SUCCESS);
+        result2.setStatus(StatusCode.OK);
         result2.setSuccess(true);
         result2.setData(result);
         return ResponseEntity.ok(result2);
@@ -53,14 +53,14 @@ public class UserController {
         BaseResponseDTO result = new BaseResponseDTO<>();
 
         if(userService.checkEmailDup(email)){
-            result.setStatus(404);
+            result.setStatus(StatusCode.NOT_FOUND);
             result.setSuccess(false);
-            result.setMessage("이메일 중복.");
+            result.setMessage(ResponseMessage.CHECK_EMAIL_DUPLICATED);
 
         } else{
-            result.setStatus(200);
+            result.setStatus(StatusCode.OK);
             result.setSuccess(true);
-            result.setMessage("이메일 사용 가능.");
+            result.setMessage(ResponseMessage.CHECK_EMAIL_AVAILABLE);
 
             return ResponseEntity.ok(result);
         }
@@ -72,14 +72,14 @@ public class UserController {
     public ResponseEntity<BaseResponseDTO> checkNickNameDup(@PathVariable String nickName){
         BaseResponseDTO result = new BaseResponseDTO<>();
         if(userService.checkNickNameDup(nickName)){
-            result.setStatus(404);
+            result.setStatus(StatusCode.NOT_FOUND);
             result.setSuccess(false);
-            result.setMessage("닉네임 중복.");
+            result.setMessage(ResponseMessage.CHECK_NICKNAME_DUPLICATED);
 
         } else{
-            result.setStatus(200);
+            result.setStatus(StatusCode.OK);
             result.setSuccess(true);
-            result.setMessage("닉네임 사용 가능.");
+            result.setMessage(ResponseMessage.CHECK_NICKNAME_AVAILABLE);
 
             return ResponseEntity.ok(result);
         }
@@ -93,8 +93,8 @@ public class UserController {
 
         try{
             UserReadResponseDTO insertResult = userService.insertUser(dto);
-            result.setMessage("유저 등록 완료.");
-            result.setStatus(200);
+            result.setMessage(ResponseMessage.CREATED_USER_SUCCESS);
+            result.setStatus(StatusCode.OK);
             result.setSuccess(true);
             result.setData(insertResult);
 
@@ -102,7 +102,7 @@ public class UserController {
         } catch (Exception e){
             result.setMessage(e.getMessage());
             result.setSuccess(false);
-            result.setStatus(500);
+            result.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
 
             return ResponseEntity.internalServerError().body(result);
         }
@@ -112,8 +112,8 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable Long id) {
         BaseResponseDTO<UserReadResponseDTO> result = new BaseResponseDTO<>();
         userService.deleteUser(id);
-        result.setMessage("check");
-        result.setStatus(200);
+        result.setMessage(ResponseMessage.DELETE_USER_SUCCESS);
+        result.setStatus(StatusCode.OK);
         result.setSuccess(true);
         return ResponseEntity.ok(result);
     }
@@ -129,66 +129,10 @@ public class UserController {
 
             result.setStatus(StatusCode.OK);
             result.setSuccess(true);
-            result.setMessage(ResponseMessage.UPDATE_USER);
+            result.setMessage(ResponseMessage.UPDATE_USER_SUCCESS);
             result.setData(map);
 
             return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            result.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
-            result.setSuccess(false);
-            result.setMessage(ResponseMessage.INTERNAL_SERVER_ERROR);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
-    }
-
-    @PostMapping(value = "/read/challenges/process")
-    public ResponseEntity<BaseResponseDTO> readMyProcessingChallengeList(@RequestBody UserReadMyChallengeListRequestDTO dto) {
-        BaseResponseDTO<List<ReadMyProcessingChallengeResponseDTO>> result = new BaseResponseDTO<>();
-
-        try {
-            List<ReadMyProcessingChallengeResponseDTO> response = userService.readMyProcessingChallenge(dto);
-
-            result.setStatus(StatusCode.OK);
-            result.setSuccess(true);
-            result.setMessage("성공적으로 챌린지 목록을 반환했습니다.");
-            result.setData(response);
-
-            return ResponseEntity.ok(result);
-        } catch (EntityNotFoundException e) {
-            result.setStatus(StatusCode.BAD_REQUEST);
-            result.setSuccess(true);
-            result.setMessage(e.getMessage());
-
-            return ResponseEntity.badRequest().body(result);
-        } catch (Exception e) {
-            result.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
-            result.setSuccess(false);
-            result.setMessage(ResponseMessage.INTERNAL_SERVER_ERROR);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
-    }
-
-    @PostMapping(value = "/read/challenges/complete")
-    public ResponseEntity<BaseResponseDTO> readMyCompleteChallengeList(@RequestBody UserReadMyChallengeListRequestDTO dto) {
-        BaseResponseDTO<List<ReadMyCompleteChallengeResponseDTO>> result = new BaseResponseDTO<>();
-
-        try {
-            List<ReadMyCompleteChallengeResponseDTO> response = userService.readMyCompleteChallenge(dto);
-
-            result.setStatus(StatusCode.OK);
-            result.setSuccess(true);
-            result.setMessage("성공적으로 챌린지 목록을 반환했습니다.");
-            result.setData(response);
-
-            return ResponseEntity.ok(result);
-        } catch (EntityNotFoundException e) {
-            result.setStatus(StatusCode.BAD_REQUEST);
-            result.setSuccess(true);
-            result.setMessage(e.getMessage());
-
-            return ResponseEntity.badRequest().body(result);
         } catch (Exception e) {
             result.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             result.setSuccess(false);

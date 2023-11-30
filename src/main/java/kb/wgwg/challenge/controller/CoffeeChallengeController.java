@@ -63,22 +63,22 @@ public class CoffeeChallengeController {
 
         try {
             CoffeeChallengeInsertResponseDTO result = coffeeChallengeService.insertCoffeeChallenge(dto);
-            response.setMessage("성공적으로 챌린지가 생성되었습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.CREATED_CHALLENGE_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
 
             return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
 
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
             response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
 
             return ResponseEntity.internalServerError().body(response);
@@ -90,32 +90,32 @@ public class CoffeeChallengeController {
         BaseResponseDTO<Void> response = new BaseResponseDTO<>();
         try {
             coffeeChallengeService.participateCoffeeChallenge(dto);
-            response.setMessage("성공적으로 챌린지에 참여하었습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.INSERT_CHALLENGE_USER_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
 
             return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
 
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
-            response.setMessage("이미 참여중인 챌린지입니다.");
-            response.setStatus(400);
+            response.setMessage(ResponseMessage.ALREADY_PARTICIPATED_CHALLENGE);
+            response.setStatus(StatusCode.BAD_REQUEST);
             response.setSuccess(false);
 
             return ResponseEntity.badRequest().body(response);
         } catch (IndexOutOfBoundsException e) {
-            response.setMessage("참여자가 가득 차 더 이상 참여가 불가능합니다.");
-            response.setStatus(400);
+            response.setMessage(ResponseMessage.OVER_CAPACITY_CHALLENGE);
+            response.setStatus(StatusCode.BAD_REQUEST);
             response.setSuccess(false);
 
             return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
 
             return ResponseEntity.internalServerError().body(response);
@@ -127,7 +127,7 @@ public class CoffeeChallengeController {
         BaseResponseDTO<Page<CoffeeChallengeListResponseDTO>> response = new BaseResponseDTO<>();
         try {
             Page<CoffeeChallengeListResponseDTO> result = coffeeChallengeService.findNChallengeByStatus(requestDTO, pageable);
-            response.setMessage(ResponseMessage.READ_CHALLENGELIST_SUCCESS);
+            response.setMessage(ResponseMessage.READ_CHALLENGE_LIST_SUCCESS);
             response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
@@ -151,17 +151,17 @@ public class CoffeeChallengeController {
 
         try {
             CoffeeChallengeReadResponseDTO result = coffeeChallengeService.findCoffeeChallengeById(id);
-            response.setMessage("성공적으로 챌린지를 불러왔습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.READ_CHALLENGE_INFO_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
         } catch (Exception e) {
             response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
         return ResponseEntity.ok(response);

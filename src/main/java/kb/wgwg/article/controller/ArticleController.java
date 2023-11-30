@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 
-import static kb.wgwg.common.ResponseMessage.INTERNAL_SERVER_ERROR;
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/articles")
@@ -29,8 +26,8 @@ public class ArticleController {
     public ResponseEntity<BaseResponseDTO> insertArticle(@RequestBody ArticleInsertRequestDTO requestDTO){
         BaseResponseDTO<ArticleInsertResponseDTO> result2 = new BaseResponseDTO<>();
         ArticleInsertResponseDTO result = service.insertArticle(requestDTO);
-        result2.setMessage("게시글 등록 완료");
-        result2.setStatus(200);
+        result2.setMessage(ResponseMessage.CREATED_ARTICLE_SUCCESS);
+        result2.setStatus(StatusCode.OK);
         result2.setSuccess(true);
         result2.setData(result);
         return ResponseEntity.ok(result2);
@@ -42,7 +39,7 @@ public class ArticleController {
         try {
             if(service.deleteArticle(id) > 0){
                 result.setStatus(StatusCode.OK);
-                result.setMessage(ResponseMessage.DELETE_ARTICLE);
+                result.setMessage(ResponseMessage.DELETE_ARTICLE_SUCCESS);
                 result.setSuccess(true);
                 return ResponseEntity.ok(result);
             }
@@ -55,7 +52,7 @@ public class ArticleController {
         } catch (Exception e){
             result.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             result.setSuccess(false);
-            result.setMessage(INTERNAL_SERVER_ERROR);
+            result.setMessage(ResponseMessage.INTERNAL_SERVER_ERROR);
 
             return ResponseEntity.internalServerError().body(result);
         }
@@ -65,12 +62,11 @@ public class ArticleController {
     public ResponseEntity updateArticle(@RequestBody ArticleUpdateDTO dto) {
         BaseResponseDTO<ArticleUpdateDTO> result2 = new BaseResponseDTO<>();
         ArticleUpdateDTO result = service.updateArticle(dto);
-        result2.setMessage("성공");
-        result2.setStatus(200);
+        result2.setMessage(ResponseMessage.UPDATE_ARTICLE_SUCCESS);
+        result2.setStatus(StatusCode.OK);
         result2.setSuccess(true);
         result2.setData(result);
         return ResponseEntity.ok(result2);
-
     }
 
     @GetMapping(value = "/read/{id}")
@@ -79,18 +75,17 @@ public class ArticleController {
 
         try {
             ArticleReadResponseDTO result = service.findArticleById(id);
-            response.setMessage("성공적으로 게시글을 불러왔습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.READ_ARTICLE_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
-
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
         } catch (Exception e) {
-            response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setMessage(ResponseMessage.INTERNAL_SERVER_ERROR);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
 
@@ -105,18 +100,17 @@ public class ArticleController {
         try {
             pageable = PageRequest.of(pageable.getPageNumber(), 10, Sort.by("updateDate").descending().and(Sort.by("title")));
             Page<ArticleListResponseDTO> result = service.findArticlesByCategory(dto.getCategory(), pageable);
-            response.setMessage("성공적으로 게시글을 불러왔습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.READ_ARTICLE_LIST_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
-
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
         } catch (Exception e) {
-            response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setMessage(ResponseMessage.INTERNAL_SERVER_ERROR);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
 
@@ -128,18 +122,18 @@ public class ArticleController {
         BaseResponseDTO<Page<ArticleListUserResponseDTO>> response = new BaseResponseDTO<>();
         try {
             Page<ArticleListUserResponseDTO> result = service.findArticleByUser(userSeq, pageable);
-            response.setMessage("성공적으로 게시글 내역을 불러왔습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.READ_ARTICLE_LIST_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(400);
+            response.setStatus(StatusCode.BAD_REQUEST);
             response.setSuccess(false);
         } catch (Exception e) {
             e.printStackTrace();
-            response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setMessage(ResponseMessage.INTERNAL_SERVER_ERROR);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
         return ResponseEntity.ok(response);

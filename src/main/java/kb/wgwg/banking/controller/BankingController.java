@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/banking")
@@ -32,17 +30,17 @@ public class BankingController {
         BaseResponseDTO<Page<BankingListResponseDTO>> response = new BaseResponseDTO<>();
         try {
             Page<BankingListResponseDTO> result = bankingService.findBankingByYearAndMonth(dto.getBankingDate().getYear(), dto.getBankingDate().getMonthValue(), dto.getUserSeq(), pageable);
-            response.setMessage("성공적으로 입출금 내역을 불러왔습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.READ_BANKING_HISTORY_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(400);
+            response.setStatus(StatusCode.BAD_REQUEST);
             response.setSuccess(false);
         } catch (Exception e) {
             response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
         return ResponseEntity.ok(response);
@@ -54,17 +52,17 @@ public class BankingController {
 
         try {
             BankingReadResponseDTO result = bankingService.findBankingById(id);
-            response.setMessage("성공적으로 입출금 내역을 불러왔습니다.");
-            response.setStatus(200);
+            response.setMessage(ResponseMessage.READ_BANKING_HISTORY_SUCCESS);
+            response.setStatus(StatusCode.OK);
             response.setSuccess(true);
             response.setData(result);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
         } catch (Exception e) {
             response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
         return ResponseEntity.ok(response);
@@ -77,16 +75,16 @@ public class BankingController {
         try {
             BankingUpdateDTO result = bankingService.updateBanking(dto);
             response.setSuccess(true);
-            response.setStatus(200);
+            response.setStatus(StatusCode.OK);
             response.setData(result);
-            response.setMessage("입출금 내역이 성공적으로 수정되었습니다.");
+            response.setMessage(ResponseMessage.UPDATE_BANKING_HISTORY_SUCCESS);
         } catch (EntityNotFoundException e) {
             response.setMessage(e.getMessage());
-            response.setStatus(404);
+            response.setStatus(StatusCode.NOT_FOUND);
             response.setSuccess(false);
         } catch (Exception e) {
             response.setMessage(INTERNAL_SERVER_ERROR);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
             response.setSuccess(false);
         }
 
@@ -99,15 +97,15 @@ public class BankingController {
 
         try {
             bankingService.deleteBankingHistory(bankingId);
-            response.setMessage("입출금 내역이 성공적으로 삭제되었습니다.");
+            response.setMessage(ResponseMessage.DELETE_BANKING_HISTORY_SUCCESS);
             response.setSuccess(true);
-            response.setStatus(200);
+            response.setStatus(StatusCode.OK);
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             response.setMessage(e.getMessage());
             response.setSuccess(false);
-            response.setStatus(500);
+            response.setStatus(StatusCode.INTERNAL_SERVER_ERROR);
 
             return ResponseEntity.internalServerError().body(response);
         }
@@ -123,7 +121,7 @@ public class BankingController {
             map.put("bankingSeq", savedId);
 
             response.setStatus(StatusCode.OK);
-            response.setMessage(ResponseMessage.BANKING_INSERT_SUCCESS);
+            response.setMessage(ResponseMessage.INSERT_BANKING_SUCCESS);
             response.setSuccess(true);
             response.setData(map);
 
@@ -146,7 +144,6 @@ public class BankingController {
 
     @PostMapping(value = "/read/category")
     public ResponseEntity<BaseResponseDTO> readCategoryProportion(@RequestBody ReadCategoryRequestDTO requestDTO) {
-//        BaseResponseDTO<List<ReadCategoryResponseDTO>> result = new BaseResponseDTO<>();
         BaseResponseDTO<List<Map<String, Integer>>> result = new BaseResponseDTO<>();
         try {
             List<Map<String, Integer>> resultData = bankingService.readCategoryProportion(requestDTO);

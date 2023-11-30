@@ -22,8 +22,8 @@ public class CommentController {
     public ResponseEntity<BaseResponseDTO> insertComment(@RequestBody CommentInsertRequestDTO dto) {
         BaseResponseDTO<CommentInsertResponseDTO> result2 = new BaseResponseDTO<>();
         CommentInsertResponseDTO result = commentService.insertComment(dto);
-        result2.setMessage("댓글 등록 완료");
-        result2.setStatus(200);
+        result2.setMessage(ResponseMessage.CREATED_COMMENT_SUCCESS);
+        result2.setStatus(StatusCode.OK);
         result2.setSuccess(true);
         result2.setData(result);
         return ResponseEntity.ok(result2);
@@ -36,7 +36,7 @@ public class CommentController {
         BaseResponseDTO result = new BaseResponseDTO();
         try {
             if(commentService.deleteComment(id) > 0) {
-                result.setMessage(ResponseMessage.COMMENT_DELETE_SUCCESS);
+                result.setMessage(ResponseMessage.DELETE_COMMENT_SUCCESS);
                 result.setStatus(StatusCode.OK);
                 result.setSuccess(true);
                 return ResponseEntity.ok(result);
@@ -61,7 +61,7 @@ public class CommentController {
         try {
             int updateRows = commentService.updateComment(dto);
             result.setStatus(StatusCode.OK);
-            result.setMessage(ResponseMessage.COMMENT_UPDATE_SUCCESS);
+            result.setMessage(ResponseMessage.UPDATE_COMMENT_SUCCESS);
             result.setSuccess(true);
             result.setData(updateRows);
             return ResponseEntity.ok(result);
